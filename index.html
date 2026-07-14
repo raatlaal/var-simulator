@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AFA Approved VAR Simulator</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .header {
+            background: linear-border;
+            border-bottom: 3px solid #74acdf;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .video-box {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 4px solid #74acdf;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(116, 172, 223, 0.3);
+        }
+        .video-box iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #172237;
+            color: white;
+            border: 2px solid #2a3b5c;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        button:hover {
+            background-color: #74acdf;
+            color: #0b0f19;
+            border-color: #fff;
+        }
+        
+        /* The Screens Setup */
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        /* Public Stadium Screen */
+        .stadium-screen {
+            background-color: #000;
+            border: 5px dashed #ffcc00;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+        }
+        .stadium-title {
+            font-size: 14px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0 0 10px 0;
+        }
+        .stadium-decision {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffcc00;
+            letter-spacing: 1px;
+        }
+
+        /* Corrupt Wire Transfer Notification */
+        .bribe-notification {
+            background: linear-gradient(135deg, #112614 0%, #071208 100%);
+            border: 3px solid #2ecc71;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.4);
+            animation: slideIn 0.4s ease-out;
+        }
+        .bribe-badge {
+            background-color: #2ecc71;
+            color: black;
+            font-weight: bold;
+            padding: 3px 8px;
+            font-size: 12px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .bribe-amount {
+            font-size: 24px;
+            color: #2ecc71;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .bribe-msg {
+            font-style: italic;
+            color: #a3e4d7;
+            margin: 5px 0 0 0;
+        }
+
+        #next-btn {
+            background-color: #2ecc71;
+            color: black;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 18px;
+            display: none;
+        }
+        #next-btn:hover {
+            background-color: #27ae60;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🖥️ Official VAR Review Room</h1>
+        <p>Match Incident Analysis Protocol</p>
+    </div>
+
+    <h3 id="clip-title">Incident 1 of 5: Premium Penalty Box Analysis</h3>
+    <div class="video-box">
+        <!-- Replace the src URLs below with actual YouTube embed links later -->
+        <iframe id="video-frame" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div id="controls-section">
+        <div class="btn-group">
+            <button onclick="submitDecision('Penalty')">Penalty</button>
+            <button onclick="submitDecision('No Penalty')">No Penalty</button>
+            <button onclick="submitDecision('Red Card')">Red Card</button>
+            <button onclick="submitDecision('Handball')">Handball</button>
+        </div>
+    </div>
+
+    <div id="loading-state" style="display:none; color: #74acdf; font-size: 20px; font-weight: bold; margin: 20px 0;">
+        Consulting with Technical Committee... ⏱️
+    </div>
+
+    <div id="results-area" class="results-container">
+        <!-- Public View -->
+        <div class="stadium-screen">
+            <p class="stadium-title">🏟️ Stadium Big Screen Output</p>
+            <div id="public-decision" class="stadium-decision">VAR: PENALTY</div>
+        </div>
+
+        <!-- Secret Bribe View -->
+        <div class="bribe-notification">
+            <span class="bribe-badge">⚠️ Encrypted Alert received</span>
+            <div id="bribe-cash" class="bribe-amount">$100,000.00 DEPOSITED</div>
+            <p id="bribe-instruction" class="bribe-msg">"Keep your mouth shut."</p>
+        </div>
+        
+        <button id="next-btn" onclick="nextClip()">Load Next Incident ➡️</button>
+    </div>
+</div>
+
+<script>
+    // Configuration data for the 5 clips
+    const incidents = [
+        {
+            title: "Incident 1 of 5: Opponent breathing too hard on Mac Allister",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Change to actual video later
+            publicOutput: "🖥️ VAR DECISION: PENALTY",
+            bribeAmount: "💰 $100,000.00 USD BLIND-TRUST DEPOSIT",
+            bribeText: `"Transaction complete. Keep your mouth shut."`
+        },
+        {
+            title: "Incident 2 of 5: Messi falling over a blade of grass",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Change to actual video later
+            publicOutput: "🖥️ VAR DECISION: PENALTY + OPPONENT RED CARD",
+            bribeAmount: "✈️ 4x FIRST-CLASS TICKETS TO BUENOS AIRES",
+            bribeText: `"Your family safety is secured. You saw nothing."`
+        },
+        {
+            title: "Incident 3 of 5: De Paul executing a textbook WWE spear",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Change to actual video later
+            publicOutput: "🖥️ VAR DECISION: NO PENALTY (CLEAN CHALLENGE)",
+            bribeAmount: "🏎️ FERRARI F8 KEYLESS FOB ACTIVATED",
+            bribeText: `"It was delivered to your driveway. Delete the footage."`
+        },
+        {
+            title: "Incident 4 of 5: Clear basketball dribble in the penalty box",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Change to actual video later
+            publicOutput: "🖥️ VAR DECISION: INADMISSIBLE FOOTAGE / PLAY ON",
+            bribeAmount: "🏝️ CARIBBEAN PRIVATE ISLAND DEED RECOGNIZED",
+            bribeText: `"The camera angle glitched. Enjoy your retirement."`
+        },
+        {
+            title: "Incident 5 of 5: Complete bench clearance chaos",
+            videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Change to actual video later
+            publicOutput: "🖥️ MATCH TERMINATED: ARGENTINA DECLARED WINNER 3-0",
+            bribeAmount: "👑 HONORARY HEAD OF FIFA FINANCES POSITION APPOINTED",
+            bribeText: `"Don't wake up tomorrow asking questions. Long live the federation."`
+        }
+    ];
+
+    let currentIncidentIndex = 0;
+
+    function submitDecision(userChoice) {
+        // Hide buttons, show loading
+        document.getElementById('controls-section').style.display = 'none';
+        document.getElementById('loading-state').style.display = 'block';
+        document.getElementById('results-area').style.display = 'none';
+
+        // Fake suspense delay
+        setTimeout(() => {
+            document.getElementById('loading-state').style.display = 'none';
+            
+            const currentData = incidents[currentIncidentIndex];
+            
+            // Populating data based on our layout
+            document.getElementById('public-decision').innerText = currentData.publicOutput;
+            document.getElementById('bribe-cash').innerText = currentData.bribeAmount;
+            document.getElementById('bribe-instruction').innerText = currentData.bribeText;
+            
+            // Show Results & Next button
+            document.getElementById('results-area').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        }, 2000);
+    }
+
+    function nextClip() {
+        currentIncidentIndex++;
+        
+        if (currentIncidentIndex < incidents.length) {
+            // Update UI elements for the next clip
+            const nextData = incidents[currentIncidentIndex];
+            document.getElementById('clip-title').innerText = nextData.title;
+            document.getElementById('video-frame').src = nextData.videoUrl;
+            
+            // Reset visibility states
+            document.getElementById('results-area').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('controls-section').style.display = 'block';
+        } else {
+            // End of simulation screen override
+            document.getElementById('clip-title').innerText = "Assessment Complete";
+            document.getElementById('controls-section').style.display = 'none';
+            document.getElementById('results-area').innerHTML = `
+                <div class="bribe-notification" style="text-align: center; border-color: #ffcc00;">
+                    <span class="bribe-badge" style="background-color: #ffcc00;">🏁 SIMULATION END</span>
+                    <div class="bribe-amount" style="color: #ffcc00;">CONGRATULATIONS REFEREE</div>
+                    <p class="bribe-msg" style="color: #fff;">You have successfully passed the corrupt VAR certification program. Your Swiss bank accounts are loaded.</p>
+                    <button onclick="location.reload()" style="margin-top: 20px; background: #ffcc00; color: black; border: none; width: 100%;">Restart Training</button>
+                </div>
+            `;
+            document.getElementById('results-area').style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
